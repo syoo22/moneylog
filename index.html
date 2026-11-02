@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="theme-color" content="#8bbcf7"><meta name="description" content="카드 사용 금액과 월별 지출을 간편하게 기록하고 관리해요."><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>우리의 카드 기록</title><style>
+:root{--blue:#3976dc;--ink:#26334a;--muted:#8993a4;--line:#e9edf4;--bg:#f6f8fc;--green:#188766}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+.wrap{width:100%;max-width:520px;margin:auto;padding:22px 16px 40px}
+header{font-size:21px;font-weight:800;margin:5px 2px 20px}
+.month{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.month button{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--blue);font-size:23px}
+.month strong{font-size:17px}
+.summary{position:relative;isolation:isolate;overflow:hidden;background:var(--blue);color:white;border-radius:22px;padding:22px 20px;margin-bottom:13px;box-shadow:0 9px 22px #26334a18}
+.summary:before,.summary:after{content:'';position:absolute;z-index:-1;pointer-events:none}
+.summary:before{width:164px;height:164px;right:-36px;top:-68px;border-radius:50%;background:#ffffff27;box-shadow:0 0 0 18px #ffffff0d,0 0 0 38px #ffffff09}
+.summary:after{width:104px;height:104px;right:48px;bottom:-72px;border-radius:34px;transform:rotate(34deg);background:#ffffff18}
+.summary>*{position:relative;z-index:1}
+.summary[data-pattern='1']:before{width:138px;height:138px;right:-25px;top:-40px;border-radius:28px;transform:rotate(28deg);background:radial-gradient(circle,#ffffff55 1.5px,transparent 2px);background-size:13px 13px;box-shadow:none}
+.summary[data-pattern='2']:before{width:190px;height:190px;right:-60px;top:-94px;border:19px solid #ffffff20;background:transparent;box-shadow:0 0 0 15px #ffffff0d}
+.summary[data-pattern='3']:before{width:170px;height:170px;right:-46px;top:-78px;border-radius:48% 52% 38% 62%;background:#ffffff20;transform:rotate(-25deg);box-shadow:-28px 45px 0 -12px #ffffff12}
+.summary[data-pattern='4']:before{width:145px;height:145px;right:-34px;top:-56px;border-radius:50%;background:repeating-conic-gradient(#ffffff20 0 9deg,transparent 9deg 18deg)}
+.summary[data-pattern='5']:before{width:160px;height:160px;right:-42px;top:-70px;border-radius:42%;background:linear-gradient(135deg,#ffffff25 25%,transparent 25% 50%,#ffffff16 50% 75%,transparent 75%);background-size:24px 24px;transform:rotate(18deg)}
+.small{font-size:13px;opacity:.92}
+.summary[style*='240, 196, 94'] .small,.summary[style*='#F0C45E'] .small{color:#34415A}
+.total{font-size:36px;font-weight:850;letter-spacing:-1px;margin:7px 0 3px}
+.track{height:10px;background:#ffffff55;border-radius:20px;margin:18px 0 10px;overflow:hidden}
+.fill{height:100%;width:0;background:white;border-radius:20px}
+.bottom{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.bottom b{font-size:14px}
+.remain{font-size:15px;font-weight:800;margin-top:15px}
+.panel{background:white;border:1px solid var(--line);border-radius:19px;padding:19px;margin-bottom:13px}
+h2{font-size:17px;margin:0 0 16px}
+label{display:block;font-size:13px;font-weight:700;color:#68758a;margin:14px 0 7px}
+input{display:block;width:100%;min-width:0;height:51px;border:1.5px solid #e2e8f1;border-radius:12px;padding:0 13px;background:#fff;color:var(--ink);font:inherit;font-size:16px;outline:none}
+input:focus{border-color:var(--blue)}
+.amountbox{display:flex;align-items:center;border:1.5px solid #e2e8f1;border-radius:13px;padding:0 13px;height:58px}
+.amountbox:focus-within{border-color:var(--blue)}
+.amountbox input{height:54px;border:0;padding:0;font-size:23px;font-weight:800}
+.amountbox span{color:var(--muted);font-weight:700}
+ .fields{display:flex;flex-direction:column;gap:0;width:100%;align-items:stretch}
+.fields>div{display:block;width:100%;min-width:0}
+.fields input{display:block;width:100%;max-width:100%;min-width:0;-webkit-appearance:none;appearance:none}
+.fields input[type="date"]{height:54px;width:100%;max-width:100%;padding:0 12px;text-align:center!important;text-align-last:center;font-size:16px;font-variant-numeric:tabular-nums;display:block;margin-inline:auto;-webkit-appearance:none;appearance:none} .fields input[type="date"]::-webkit-date-and-time-value{text-align:center!important;margin-inline:auto} .fields input[type="date"]::-webkit-calendar-picker-indicator{margin-left:8px}
+.fields input[type="text"]{height:54px}
+.add{width:100%;height:53px;margin-top:19px;border:0;border-radius:13px;background:var(--blue);color:#fff;font-size:16px;font-weight:800}
+.listtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.listtop h2{margin:0}
+.count{font-size:12px;color:var(--muted)}
+.item{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0;padding-bottom:0}
+.dot{width:36px;height:36px;border-radius:12px;background:#eff4ff;color:var(--blue);display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.info{flex:1;min-width:0}
+.memo{font-size:14px;font-weight:750;overflow-wrap:anywhere}
+.date{font-size:11px;color:var(--muted);margin-top:4px}
+.price{font-size:14px;font-weight:800;white-space:nowrap}
+.del{border:0;background:none;color:#9aa3b1;font-size:11px;padding:5px 0 0 8px}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px 8px}
+.hint{text-align:center;font-size:11px;color:#9aa3b1;line-height:1.6;padding:4px 12px}
+
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;padding:5px;background:#edf1f8;border-radius:14px;margin:0 0 13px}
+.tabbtn{height:43px;border:0;border-radius:11px;background:transparent;color:#78859a;font-size:14px;font-weight:800}
+.tabbtn.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px #24324a12}
+.view[hidden]{display:none!important}
+.calendar-panel{padding:16px 13px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;gap:8px}
+.cal-head strong{font-size:17px}
+.cal-head button{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:10px;height:36px;min-width:36px;font-size:20px}
+.cal-head .todaybtn{font-size:12px;font-weight:800;padding:0 12px}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));text-align:center}
+.weekdays{padding-bottom:10px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:700}
+.weekdays span:first-child{color:#d47783}
+.weekdays span:last-child{color:#6b8bc8}
+.days{row-gap:5px;padding-top:7px}
+.day{border:0;background:transparent;border-radius:12px;min-height:65px;padding:6px 1px 4px;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-width:0}
+.daynum{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:750}
+.day.other .daynum{color:#bdc4cf}
+.day.sun .daynum{color:#d47783}
+.day.selected{background:#edf3ff;outline:1px solid #b9d0fb}
+.day.selected .daynum{background:var(--blue);color:#fff}
+.day.today:not(.selected) .daynum{outline:1px solid var(--blue);color:var(--blue)}
+.dayamount{font-size:9px;color:#78859a;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.daydot{width:5px;height:5px;background:#4d94e8;border-radius:50%;margin-top:1px}
+.cal-legend{display:flex;gap:14px;align-items:center;margin-top:11px;color:var(--muted);font-size:11px}
+.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4d94e8;margin-right:5px}
+.day-detail{margin-top:17px;padding-top:16px;border-top:1px solid var(--line)}
+.detail-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.detail-title strong{font-size:16px}
+.detail-total{font-size:13px;color:var(--blue);font-weight:800}
+.detail-empty{text-align:center;padding:18px 5px;color:var(--muted);font-size:12px}
+
+.budgetline{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:9px;color:#ffffffdf}
+.budgetline strong{font-size:14px;color:#fff}
+.brother-summary{background:#6887c8}
+.budget-panel{padding:15px 17px}
+.budget-panel label{margin:0 0 8px}
+.budget-edit{display:flex;gap:8px;align-items:center}
+.budget-edit .amountbox{flex:1;min-width:0;height:49px}
+.budget-edit .amountbox input{height:45px;font-size:18px}
+.savebudget{height:49px;padding:0 15px;border:0;border-radius:12px;background:#eaf1ff;color:#3267bd;font-size:13px;font-weight:800;white-space:nowrap}
+.feedback{display:none;margin:12px 0 0;text-align:center;font-size:13px;font-weight:700;color:#188766}
+.calendar-legend{display:flex;gap:16px;align-items:center;margin:-5px 0 12px;color:var(--muted);font-size:11px}
+.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.mom-dot{background:#4d94e8}.brother-dot{background:#e4a34e}
+.daydots{display:flex;gap:3px;justify-content:center;margin-top:1px}
+.daydots i{width:5px;height:5px;border-radius:50%;display:block}
+.daydots .mom-dot{background:#4d94e8}.daydots .brother-dot{background:#e4a34e}
+.dayamount{font-size:8px}
+.category-tag{font-size:10px;font-weight:800;color:#6b83ad;margin-bottom:3px}
+.brother-tag{color:#b77b32}
+
+@media(max-width:380px){.day{min-height:59px}.dayamount{font-size:8px}.calendar-panel{padding:14px 9px}}
+
+@media(max-width:350px){.wrap{padding:16px 12px}.panel{padding:15px}.total{font-size:32px}}
+
+.category-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;width:100%}
+.category-actions .savebudget{height:44px;width:100%;background:#eaf2ff;color:#3976c8}
+.category-actions .delete-category{background:#fff0f2;color:#bd6878}
+.category-actions .add-category{grid-column:1/-1;width:100%;height:52px;border:1.5px dashed #9bbce9;border-radius:14px;background:#fff;color:#3976dc;font-size:16px;font-weight:800}
+.tabs{width:100%;grid-template-columns:repeat(auto-fit,minmax(0,1fr));}
+.calendar-panel{width:100%;max-width:100%;margin-left:auto;margin-right:auto;padding:16px 12px}
+.weekdays,.days{width:100%;grid-template-columns:repeat(7,minmax(0,1fr))}
+.day{width:100%;padding-left:0;padding-right:0}
+.calendar-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;width:100%}
+.dayamount{max-width:calc(100% - 2px);font-variant-numeric:tabular-nums}
+@media(max-width:380px){.category-actions{gap:6px}.category-actions .savebudget{font-size:12px}.calendar-panel{padding:13px 7px}.day{min-height:57px}.daynum{width:26px;height:26px}}
+
+.brand-header{margin:5px 2px 20px}
+.brand-name{display:block;font-size:27px;font-weight:900;letter-spacing:-1.2px;color:#26334a;line-height:1.2}
+.brand-en{font-size:12px;font-weight:800;letter-spacing:1.1px;color:#78A6DE;margin-left:7px;vertical-align:middle}
+.brand-subtitle{margin:6px 0 0;color:#8998AD;font-size:12px;font-weight:500;letter-spacing:-.1px}
+.fields input[type="date"]{color:var(--ink)}
+@media(max-width:380px){.brand-name{font-size:25px}.brand-subtitle{font-size:11px}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="brand-header"><span class="brand-name">차곡<span class="brand-en">(CHAGOK)</span></span><p class="brand-subtitle">매일의 카드 지출을 차곡차곡 기록해요.</p></header>
+<div class="month"><button type="button" id="prev" aria-label="이전 달">‹</button><strong id="monthLabel"></strong><button type="button" id="next" aria-label="다음 달">›</button></div>
+<nav class="tabs" id="tabs" aria-label="기록 항목"></nav>
+<div class="category-actions">
+ <button type="button" class="savebudget" id="renameCategory">항목 이름 수정</button>
+ <button type="button" class="savebudget delete-category" id="deleteCategory">항목 삭제</button>
+ <button type="button" class="add-category" id="addCategory">＋ 새 기록 항목 추가</button>
+</div>
+<div id="categoryView" class="view">
+ <section class="summary" id="summary">
+  <div class="small" id="categorySummaryLabel">이번 달 사용 금액</div>
+  <div class="total" id="total">0원</div>
+  <div class="budgetline"><span>이번 달 한도</span><strong id="budgetLabel">미설정</strong></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <div class="bottom"><span id="percent">한도 미설정</span><span>남은 한도 <b id="left">-</b></span></div>
+ </section>
+ <section class="panel budget-panel">
+  <label for="budgetInput">이번 달 사용 한도</label>
+  <div class="budget-edit"><div class="amountbox"><input id="budgetInput" type="number" inputmode="numeric" min="1" step="1" placeholder="한도 금액"><span>원</span></div><button type="button" class="savebudget" id="saveBudget">한도 저장</button></div>
+ </section>
+ <section class="panel">
+  <h2 id="formTitle">사용 금액 입력</h2>
+  <form id="entryForm">
+   <label for="amount">사용한 금액</label>
+   <div class="amountbox"><input id="amount" type="number" inputmode="numeric" min="1" step="1" placeholder="금액 입력" required><span>원</span></div>
+   <div class="fields">
+    <div><label for="entryDate">사용 날짜</label><input id="entryDate" type="date" required></div>
+    <div><label for="memo">사용한 곳 (선택)</label><input id="memo" type="text" maxlength="40" placeholder="예: 마트"></div>
+   </div>
+   <button class="add" type="submit" id="addButton">사용 내역 추가</button>
+   <p id="feedback" role="status" aria-live="polite" class="feedback"></p>
+  </form>
+ </section>
+ <section class="panel">
+  <div class="listtop"><h2 id="listTitle">사용 내역</h2><span class="count" id="count">0건</span></div>
+  <div id="entryList"></div>
+ </section>
+</div>
+<div id="calendarView" class="view" hidden>
+ <section class="panel calendar-panel">
+  <div class="cal-head">
+   <button type="button" id="calPrev" aria-label="이전 달">‹</button>
+   <strong id="calMonth"></strong>
+   <button type="button" id="calNext" aria-label="다음 달">›</button>
+   <button type="button" class="todaybtn" id="calToday">오늘</button>
+  </div>
+  <div class="calendar-legend" id="calendarLegend"></div>
+  <div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+  <div class="days" id="calendarDays"></div>
+  <div class="day-detail">
+   <div class="detail-title"><strong id="selectedDateTitle"></strong><span class="detail-total" id="selectedDateTotal">0원</span></div>
+   <div id="dayItems"></div>
+  </div>
+ </section>
+</div>
+<div class="hint">입력한 사용 내역은 이 휴대폰에 자동 저장됩니다. 다른 기기와 함께 사용하려면 데이터 동기화 기능이 필요합니다.</div>
+</div>
+<script>
+(function(){
+'use strict';
+const KEY='mom-card-tracker-simple-v3', BUDGET_KEY='mom-card-tracker-budgets-v1', CAT_KEY='mom-card-tracker-categories-v1';
+const $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const dateObj=s=>{const a=s.split('-').map(Number);return new Date(a[0],a[1]-1,a[2])};
+const monthKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const won=n=>`${Math.round(n).toLocaleString('ko-KR')}원`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const palette=['#6D9FEA','#EF91A8','#F0C45E','#79B99B','#A48BD8','#F09A72'];
+let entriesByMonth={},budgetsByMonth={},categories=[],active='default';
+let shownDate=new Date(new Date().getFullYear(),new Date().getMonth(),1),selectedDate=today();
+try{entriesByMonth=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){entriesByMonth={}}
+try{budgetsByMonth=JSON.parse(localStorage.getItem(BUDGET_KEY)||'{}')||{}}catch(e){budgetsByMonth={}}
+try{categories=JSON.parse(localStorage.getItem(CAT_KEY)||'null')}catch(e){categories=null}
+if(!Array.isArray(categories)||!categories.length){
+ categories=[{id:'default',name:'기본 기록',color:palette[0]}];
+ const found=new Set();
+ Object.values(entriesByMonth).forEach(list=>(Array.isArray(list)?list:[]).forEach(x=>{if(x.category==='mom')found.add('mom');if(x.category==='brother')found.add('brother')}));
+ if(found.has('mom'))categories.push({id:'mom',name:'엄마 카드',color:palette[0]});
+ if(found.has('brother'))categories.push({id:'brother',name:'오빠 밥값',color:palette[1]});
+ Object.values(entriesByMonth).forEach(list=>(Array.isArray(list)?list:[]).forEach(x=>{if(!x.category)x.category='mom';}));
+ // Preserve the previous version's default budgets without imposing them on new categories.
+ Object.entries(budgetsByMonth).forEach(([m,b])=>{if(b?.mom||b?.brother){/* retained under their original IDs */}});
+}
+// Refresh legacy category colors too, so previously saved yellow/purple colors are replaced.
+if(Array.isArray(categories)){
+ categories.forEach((c,i)=>{c.color=palette[i%palette.length]});
+}
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(entriesByMonth));localStorage.setItem(BUDGET_KEY,JSON.stringify(budgetsByMonth));localStorage.setItem(CAT_KEY,JSON.stringify(categories));return true}catch(e){return false}}
+const allEntries=()=>Object.values(entriesByMonth).flatMap(x=>Array.isArray(x)?x:[]);
+const monthEntries=()=>entriesByMonth[monthKey(shownDate)]||[];
+const catEntries=id=>monthEntries().filter(x=>(x.category||'default')===id);
+const dateEntries=date=>(entriesByMonth[date.slice(0,7)]||[]).filter(x=>x.date===date);
+const budgetFor=id=>budgetsByMonth[monthKey(shownDate)]?.[id];
+const category=id=>categories.find(c=>c.id===id);
+function renderTabs(){
+ $('tabs').innerHTML=categories.map(c=>`<button type="button" class="tabbtn ${active===c.id?'active':''}" data-category="${esc(c.id)}" style="${active===c.id?`border-bottom:3px solid ${c.color}`:''}">${esc(c.name)}</button>`).join('')+
+ `<button type="button" class="tabbtn ${active==='calendar'?'active':''}" data-category="calendar">월별 달력</button>`;
+}
+function renderCategory(){
+ const c=category(active);if(!c)return;
+ const list=catEntries(c.id),total=list.reduce((s,x)=>s+Number(x.amount||0),0),budget=budgetFor(c.id);
+ $('summary').style.background=c.color;$('summary').dataset.pattern=String(Math.max(0,categories.indexOf(c))%6);$('summary').style.color=c.color.toUpperCase()==='#F0C45E'?'#34415A':'#FFFFFF';$('categorySummaryLabel').textContent=`${c.name} 이번 달 사용 금액`;
+ $('total').textContent=won(total);$('budgetLabel').textContent=budget?won(budget):'미설정';
+ const pct=budget?Math.min(100,total/budget*100):0;
+ $('fill').style.width=pct+'%';$('percent').textContent=budget?`${Math.floor(pct)}% 사용`:'한도 미설정';
+ $('left').textContent=budget?won(Math.max(0,budget-total)):'-';$('budgetInput').value=budget||'';
+ $('formTitle').textContent=`${c.name} 사용 금액 입력`;$('listTitle').textContent=`${c.name} 사용 내역`;
+ $('count').textContent=`${list.length}건`;
+ const sorted=[...list].sort((a,b)=>b.date.localeCompare(a.date)||String(b.id).localeCompare(String(a.id)));
+ $('entryList').innerHTML=sorted.length?sorted.map(x=>`<div class="item"><div class="dot" style="background:${c.color}22;color:${c.color}">₩</div><div class="info"><div class="memo">${esc(x.memo||'카드 사용')}</div><div class="date">${x.date.replace(/-/g,'.')}</div></div><div style="text-align:right"><div class="price">${won(x.amount)}</div><button class="del" type="button" data-delete="${esc(x.id)}">삭제</button></div></div>`).join(''):'<div class="empty">아직 사용 내역이 없어요.<br>금액을 입력해 주세요.</div>';
+ $('deleteCategory').disabled=categories.length===1;
+}
+function renderCalendar(){
+ const y=shownDate.getFullYear(),m=shownDate.getMonth();$('calMonth').textContent=`${y}년 ${m+1}월`;
+ $('calendarLegend').innerHTML=categories.map(c=>`<span><i class="legend-dot" style="background:${c.color}"></i>${esc(c.name)}</span>`).join('');
+ const start=new Date(y,m,1),grid=new Date(y,m,1-start.getDay());let out='';
+ for(let i=0;i<42;i++){const d=new Date(grid.getFullYear(),grid.getMonth(),grid.getDate()+i),key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,items=dateEntries(key),total=items.reduce((s,x)=>s+Number(x.amount||0),0);
+ const used=categories.filter(c=>items.some(x=>(x.category||'default')===c.id));
+ const cls=['day',d.getMonth()===m?'':'other',d.getDay()===0?'sun':'',key===selectedDate?'selected':'',key===today()?'today':''].filter(Boolean).join(' ');
+ out+=`<button type="button" class="${cls}" data-date="${key}"><span class="daynum">${d.getDate()}</span>${used.length?`<span class="daydots">${used.map(c=>`<i style="background:${c.color}"></i>`).join('')}</span>`:''}${total?`<span class="dayamount">${won(total)}</span>`:''}</button>`;
+ }
+ $('calendarDays').innerHTML=out;
+ const items=dateEntries(selectedDate),sum=items.reduce((s,x)=>s+Number(x.amount||0),0),[yy,mm,dd]=selectedDate.split('-').map(Number);
+ $('selectedDateTitle').textContent=`${mm}월 ${dd}일 사용 내역`;$('selectedDateTotal').textContent=won(sum);
+ $('dayItems').innerHTML=items.length?[...items].sort((a,b)=>(a.category||'').localeCompare(b.category||'')).map(x=>{const c=category(x.category)||{name:'기본 기록',color:palette[0]};return `<div class="item"><div class="dot" style="background:${c.color}22;color:${c.color}">₩</div><div class="info"><div class="category-tag" style="color:${c.color}">${esc(c.name)}</div><div class="memo">${esc(x.memo||'카드 사용')}</div></div><div class="price">${won(x.amount)}</div></div>`}).join(''):'<div class="detail-empty">이 날에는 등록된 지출이 없어요.</div>';
+}
+function render(){renderTabs();$('monthLabel').textContent=`${shownDate.getFullYear()}년 ${shownDate.getMonth()+1}월`;if(active==='calendar'){ $('categoryView').hidden=true;$('calendarView').hidden=false;renderCalendar()}else{$('categoryView').hidden=false;$('calendarView').hidden=true;renderCategory()}}
+function feedback(msg,ok=true){$('feedback').style.display='block';$('feedback').style.color=ok?'#188766':'#c45b5b';$('feedback').textContent=msg}
+$('entryDate').value=today();
+$('entryForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number($('amount').value),date=$('entryDate').value,memo=$('memo').value.trim();if(!Number.isSafeInteger(amount)||amount<=0){feedback('사용한 금액을 숫자로 입력해 주세요.',false);return}if(!date){feedback('사용 날짜를 선택해 주세요.',false);return}const k=date.slice(0,7);if(!entriesByMonth[k])entriesByMonth[k]=[];entriesByMonth[k].push({id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,amount,date,memo,category:active});const d=dateObj(date);shownDate=new Date(d.getFullYear(),d.getMonth(),1);selectedDate=date;$('amount').value='';$('memo').value='';$('entryDate').value=today();feedback(save()?'사용 내역을 추가했어요.':'저장에 실패했어요.',true);render()});
+$('saveBudget').addEventListener('click',()=>{const v=Number($('budgetInput').value);if(!Number.isSafeInteger(v)||v<=0){feedback('한도는 1원 이상의 숫자로 입력해 주세요.',false);return}const k=monthKey(shownDate);if(!budgetsByMonth[k])budgetsByMonth[k]={};budgetsByMonth[k][active]=v;save();render();feedback('이번 달 한도를 저장했어요.')});
+$('entryList').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;if(!confirm('이 사용 내역을 삭제할까요?'))return;const k=monthKey(shownDate);entriesByMonth[k]=(entriesByMonth[k]||[]).filter(x=>x.id!==b.dataset.delete);save();render()});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b)return;active=b.dataset.category;render()});
+$('addCategory').addEventListener('click',()=>{const name=prompt('새 기록 항목 이름을 입력해 주세요.');if(name===null)return;const n=name.trim();if(!n){alert('항목 이름을 입력해 주세요.');return}if(categories.some(c=>c.name.toLowerCase()===n.toLowerCase())){alert('이미 같은 이름의 항목이 있어요.');return}const id='cat-'+Date.now();categories.push({id,name:n,color:palette[categories.length%palette.length]});active=id;save();render();});
+$('renameCategory').addEventListener('click',()=>{const c=category(active),name=prompt('변경할 항목 이름을 입력해 주세요.',c.name);if(name===null)return;const n=name.trim();if(!n){alert('항목 이름을 입력해 주세요.');return}if(categories.some(x=>x.id!==active&&x.name.toLowerCase()===n.toLowerCase())){alert('이미 같은 이름의 항목이 있어요.');return}c.name=n;save();render()});
+$('deleteCategory').addEventListener('click',()=>{const c=category(active);if(categories.length===1){alert('마지막 항목은 삭제할 수 없어요.');return}const count=allEntries().filter(x=>x.category===active).length;const choice=prompt(`"${c.name}" 항목에 ${count}건의 기록이 있어요.\n1을 입력하면 기록을 기본 기록으로 옮겨 보존합니다.\n2를 입력하면 기록까지 모두 삭제합니다.\n취소하려면 취소를 누르세요.`,'1');if(choice===null)return;if(choice!=='1'&&choice!=='2'){alert('1 또는 2를 입력해 주세요.');return}if(choice==='1'){let fallback=categories.find(x=>x.id==='default'&&x.id!==active);if(!fallback)fallback=categories.find(x=>x.id!==active);Object.values(entriesByMonth).forEach(list=>(list||[]).forEach(x=>{if(x.category===active)x.category=fallback.id}))}else{Object.keys(entriesByMonth).forEach(k=>entriesByMonth[k]=(entriesByMonth[k]||[]).filter(x=>x.category!==active))}Object.keys(budgetsByMonth).forEach(k=>{if(budgetsByMonth[k])delete budgetsByMonth[k][active]});categories=categories.filter(x=>x.id!==active);active=categories[0].id;save();render()});
+function changeMonth(delta){shownDate=new Date(shownDate.getFullYear(),shownDate.getMonth()+delta,1);selectedDate=`${shownDate.getFullYear()}-${String(shownDate.getMonth()+1).padStart(2,'0')}-01`;render()}
+$('prev').addEventListener('click',()=>changeMonth(-1));$('next').addEventListener('click',()=>changeMonth(1));$('calPrev').addEventListener('click',()=>changeMonth(-1));$('calNext').addEventListener('click',()=>changeMonth(1));
+$('calToday').addEventListener('click',()=>{const d=dateObj(today());shownDate=new Date(d.getFullYear(),d.getMonth(),1);selectedDate=today();render()});
+$('calendarDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(!b)return;selectedDate=b.dataset.date;renderCalendar()});
+render();
+if('serviceWorker'in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
