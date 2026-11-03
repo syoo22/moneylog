@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fa"><title>시연의 머니로그</title>
+<style>
+:root{--bg:#f5f7fa;--paper:#fff;--ink:#191f28;--muted:#87919d;--line:#edf0f3;--blue:#3182f6;--bluep:#eaf3ff;--green:#16a36a;--greenp:#e8f7f0;--red:#e4545b;--redp:#fff0f0;--shadow:0 5px 22px rgba(30,45,65,.045)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;letter-spacing:-.35px}button,input,select{font:inherit}button{border:0;cursor:pointer}.app{max-width:520px;min-height:100vh;margin:auto;padding:0 17px calc(92px + env(safe-area-inset-bottom))}
+header{height:66px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:19px;font-weight:850}.monthtag{font-size:12px;color:var(--muted);background:#eef1f4;border-radius:30px;padding:8px 11px}
+.page{display:none}.page.active{display:block}.card{background:var(--paper);border-radius:22px;padding:18px;margin-bottom:13px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;color:var(--muted);font-weight:650}.big{font-size:29px;font-weight:850;letter-spacing:-1px;margin:6px 0 0}.blue{color:var(--blue)}.green{color:var(--green)}.red{color:var(--red)}.muted{color:var(--muted)}.headrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.headrow h2{font-size:15px;margin:0}.tiny{font-size:11px;color:var(--muted)}.hero{padding:21px}.heroTop{display:flex;justify-content:space-between;align-items:flex-start}.heroGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.mini{background:#f6f8fa;border-radius:15px;padding:12px}.mini span{display:block;font-size:10px;color:var(--muted);margin-bottom:6px}.mini b{font-size:16px}.progress{height:9px;border-radius:20px;background:#edf0f3;overflow:hidden;margin-top:9px}.progress i{display:block;height:100%;background:var(--blue);border-radius:20px}.ringrow{display:flex;align-items:center;gap:18px}.ring{width:116px;height:116px;border-radius:50%;display:grid;place-items:center;flex:none;background:conic-gradient(var(--blue) 0 36%,#dce9fb 36% 100%);position:relative}.ring:after{content:"";position:absolute;inset:11px;background:#fff;border-radius:50%}.ringtext{position:relative;z-index:1;text-align:center}.ringtext b{display:block;font-size:20px}.ringtext small{font-size:10px;color:var(--muted)}.legend{flex:1}.legend div{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin:9px 0}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}.line{height:1px;background:var(--line);margin:13px 0}.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px}.row strong{font-size:13px}.btn{background:var(--blue);color:white;border-radius:13px;padding:13px 15px;font-weight:750;width:100%}.btn.light{background:var(--bluep);color:var(--blue)}.btn.darklight{background:#f1f3f5;color:#4b5663}.btn.small{width:auto;padding:9px 12px;font-size:11px}.btnrow{display:flex;gap:8px}.btnrow>*{flex:1}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(15px);border-top:1px solid var(--line);z-index:4}.nav button{background:none;color:#929ba6;font-size:10px;padding:4px}.nav button b{display:block;font-size:19px;margin-bottom:3px;font-weight:500}.nav button.active{color:var(--blue);font-weight:800}.expense{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.expense:last-child{border:0}.emoji{width:38px;height:38px;border-radius:13px;background:#f2f5f8;display:grid;place-items:center;font-size:17px}.expinfo{flex:1;min-width:0}.expinfo b{font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.expinfo small{font-size:10px;color:var(--muted)}.expamount{font-size:13px;font-weight:750}.iconbtn{background:#f1f4f7;color:#647180;border-radius:8px;padding:7px;font-size:10px}.field{display:flex;flex-direction:column;gap:6px;margin:11px 0}.field label{font-size:11px;color:var(--muted);font-weight:700}.field input,.field select{width:100%;border:1px solid #e5e9ed;border-radius:12px;padding:12px;background:white;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:var(--blue)}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.daybalance{background:var(--bluep);border-radius:16px;padding:14px;margin:12px 0}.daybalance .value{font-size:24px;font-weight:850;color:var(--blue);margin-top:4px}.warning{display:none;background:var(--redp);color:#c43c45;border-radius:12px;padding:11px;font-size:11px;line-height:1.5;margin-top:10px}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.calhead{text-align:center;color:var(--muted);font-size:10px;padding:6px 0}.calday{min-height:61px;background:#f7f9fb;border-radius:10px;padding:6px 3px;text-align:center;overflow:hidden}.calday.today{outline:1.5px solid var(--blue)}.calday .num{font-size:11px;font-weight:750;display:block;margin-bottom:5px}.calday .spend{font-size:8px;color:var(--blue);display:block;white-space:nowrap}.calday .save{font-size:8px;color:var(--green);display:block;white-space:nowrap}.monthctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}.monthctrl button{background:#f0f3f6;border-radius:9px;padding:7px 12px}.chart{height:125px;display:flex;align-items:flex-end;gap:9px;padding:8px 3px 0;border-bottom:1px solid var(--line)}.barcol{flex:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;min-width:0}.barcol i{width:min(25px,70%);background:#9bc3fb;border-radius:6px 6px 2px 2px;min-height:3px}.barcol i.current{background:var(--blue)}.barcol small{font-size:9px;color:var(--muted)}.barcol em{font-size:8px;color:var(--muted);font-style:normal;white-space:nowrap}.empty{text-align:center;color:var(--muted);font-size:12px;padding:22px 8px}.modalbg{display:none;position:fixed;inset:0;background:#14202d66;z-index:8;align-items:flex-end;justify-content:center}.modalbg.show{display:flex}.modal{width:min(520px,100%);background:#fff;border-radius:23px 23px 0 0;padding:20px 19px calc(22px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.modal h3{font-size:18px;margin:0 0 15px}.pill{font-size:10px;background:#f1f4f6;color:#687482;border-radius:30px;padding:6px 9px}.help{font-size:10px;color:var(--muted);line-height:1.5;margin-top:8px}
+</style></head>
+<body><div class="app">
+<header><div class="brand">시연의 머니로그</div><div class="monthtag" id="headerMonth"></div></header>
+
+<section class="page active" id="home">
+ <div class="card hero">
+  <div class="heroTop"><div><div class="eyebrow">이번 달 생활비 잔액</div><div class="big blue" id="homeBalance">1,000,000원</div></div><span class="pill">생활비 100만 원</span></div>
+  <div class="progress"><i id="budgetBar" style="width:0%"></i></div>
+  <div class="tiny" style="display:flex;justify-content:space-between;margin-top:7px"><span id="homeSpentLabel">0원 사용</span><span id="homeRate">0%</span></div>
+  <div class="heroGrid">
+   <div class="mini"><span>이번 달 소비</span><b id="homeSpent">0원</b></div>
+   <div class="mini"><span>생활비에서 추가 저축</span><b class="green" id="homeExtra">0원</b></div>
+  </div>
+  <div class="warning" id="overWarning">생활비 예산을 초과했어요. 소비 내역을 확인해 주세요.</div>
+ </div>
+ <div class="card">
+  <div class="headrow"><h2>이번 달 자산 배분</h2><span class="pill">월급 280만 원</span></div>
+  <div class="ringrow"><div class="ring" id="allocationRing"><div class="ringtext"><b>280만</b><small>월급</small></div></div>
+   <div class="legend">
+    <div><span><i class="dot" style="background:#3182f6"></i>생활비</span><b>100만</b></div>
+    <div><span><i class="dot" style="background:#16a36a"></i>저축 배정</span><b>162만</b></div>
+    <div><span><i class="dot" style="background:#cbd3dc"></i>고정 지출</span><b>18만</b></div>
+   </div></div>
+  <div class="line"></div>
+  <div class="row"><span>휴대폰 요금</span><strong>60,000원</strong></div>
+  <div class="row"><span>교통비</span><strong>120,000원</strong></div>
+  <div class="row"><span>주택청약 <span class="tiny">저축</span></span><strong class="green">250,000원</strong></div>
+  <div class="row"><span>청년미래적금 <span class="tiny">저축</span></span><strong class="green">500,000원</strong></div>
+  <div class="row"><span>토스 자유적금 기본액</span><strong class="green">870,000원</strong></div>
+ </div>
+ <div class="card">
+  <div class="headrow"><h2>이번 달 저축 예상</h2><span class="tiny">고정 저축 + 추가 저축</span></div>
+  <div class="big green" id="homeTotalSaving">1,620,000원</div>
+  <div class="tiny" style="margin-top:5px">생활비에서 추가 저축한 금액을 더해 계산해요.</div>
+  <div class="line"></div>
+  <div class="row"><span>기본 저축액</span><b>1,620,000원</b></div>
+  <div class="row"><span>생활비 추가 저축</span><b class="green" id="homeSavingAdd">+0원</b></div>
+  <button class="btn light" onclick="go('today')">오늘 소비 기록하기</button>
+ </div>
+</section>
+
+<section class="page" id="today">
+ <div class="card">
+  <div class="headrow"><h2>오늘의 소비</h2><span class="pill" id="todayDateLabel"></span></div>
+  <div class="field"><label>기록할 날짜</label><input type="date" id="entryDate" onchange="renderToday()"></div>
+  <div class="daybalance"><div class="eyebrow">이 날짜 기준 남은 생활비</div><div class="value" id="dayRemaining">1,000,000원</div><div class="tiny" id="daySpentText">오늘까지 누적 소비 0원</div></div>
+  <div class="headrow" style="margin:17px 0 7px"><h2>소비 내역 추가</h2><span class="tiny">생활비에서 차감</span></div>
+  <div class="field"><label>무엇을 구매했나요?</label><input id="memo" placeholder="예: 점심, 카페, 옷 쇼핑"></div>
+  <div class="two">
+   <div class="field"><label>금액</label><input id="amount" type="number" min="1" placeholder="예: 12000"></div>
+   <div class="field"><label>카테고리</label><select id="category"><option>식비</option><option>카페</option><option>쇼핑</option><option>교통</option><option>문화·여가</option><option>생활</option><option>기타</option></select></div>
+  </div>
+  <button class="btn" onclick="addExpense()">소비 내역 저장</button>
+  <div class="help">입력한 소비 금액만큼 이번 달 생활비 잔액이 바로 줄어들어요.</div>
+ </div>
+ <div class="card"><div class="headrow"><h2>선택한 날짜의 기록</h2><span class="tiny" id="selectedDayTotal"></span></div><div id="todayList"></div></div>
+ <div class="card">
+  <div class="headrow"><h2>생활비에서 추가 저축</h2><span class="pill">원할 때 기록</span></div>
+  <div class="eyebrow">현재 남은 생활비 중 얼마를 저축할까요?</div>
+  <div class="big green" id="availableForSaving">1,000,000원</div>
+  <div class="field"><label>추가 저축 금액</label><input id="savingAmount" type="number" min="0" placeholder="예: 300000"></div>
+  <button class="btn light" onclick="addSaving()">이 금액 추가 저축으로 기록</button>
+  <div class="help">추가 저축으로 기록하면 사용 가능한 생활비 잔액에서 차감되고, 이달의 총 저축액에 더해져요. 잘못 입력한 저축 기록은 분석 탭에서 확인할 수 있어요.</div>
+ </div>
+</section>
+
+<section class="page" id="analysis">
+ <div class="card">
+  <div class="monthctrl"><button onclick="shiftMonth(-1)">‹</button><b id="analysisMonth"></b><button onclick="shiftMonth(1)">›</button></div>
+  <div class="two">
+   <div class="mini"><span>이번 달 소비</span><b id="analysisSpend">0원</b></div>
+   <div class="mini"><span>이번 달 총 저축</span><b class="green" id="analysisSave">1,620,000원</b></div>
+  </div>
+  <div class="line"></div>
+  <div class="headrow"><h2>일자별 소비와 저축</h2><span class="tiny">날짜별 합계</span></div>
+  <div class="calendar" id="calendar"></div>
+  <div class="help">파란색은 소비, 초록색은 생활비에서 추가 저축한 금액이에요. 날짜를 누르면 해당 날짜의 상세 내역을 확인할 수 있어요.</div>
+ </div>
+ <div class="card">
+  <div class="headrow"><h2>월별 저축 변화</h2><span class="tiny">최근 6개월</span></div>
+  <div class="chart" id="savingChart"></div>
+  <div class="row"><span>선택한 달의 총 저축</span><b class="green" id="selectedMonthSaving">1,620,000원</b></div>
+  <div class="row"><span>전월 대비</span><b id="savingChange">기준 월</b></div>
+ </div>
+ <div class="card">
+  <div class="headrow"><h2>선택한 달 저축 기록</h2><span class="tiny">생활비 추가 저축</span></div>
+  <div id="savingList"></div>
+ </div>
+</section>
+
+<section class="page" id="settings">
+ <div class="card"><div class="headrow"><h2>월급과 예산 설정</h2></div>
+  <div class="row"><span>월급</span><b>2,800,000원</b></div><div class="row"><span>생활비</span><b>1,000,000원</b></div><div class="row"><span>기본 토스 자유적금</span><b>870,000원</b></div>
+  <div class="help">현재 버전은 요청한 고정 금액을 기준으로 계산해요.</div>
+ </div>
+ <div class="card"><div class="headrow"><h2>데이터 관리</h2></div><button class="btn darklight" onclick="exportData()">기록 백업하기</button><div style="height:8px"></div><button class="btn darklight" onclick="if(confirm('모든 소비와 추가 저축 기록을 삭제할까요?')){state={expenses:[],savings:[]};persist();renderAll()}">모든 기록 초기화</button><div class="help">기록은 현재 브라우저에 저장돼요. 브라우저 데이터 삭제 시 기록이 사라질 수 있으니 주기적으로 백업해 주세요.</div></div>
+</section>
+
+<nav class="nav">
+ <button class="active" data-id="home" onclick="go('home')"><b>⌂</b>홈</button>
+ <button data-id="today" onclick="go('today')"><b>＋</b>오늘의 소비</button>
+ <button data-id="analysis" onclick="go('analysis')"><b>▦</b>분석</button>
+ <button data-id="settings" onclick="go('settings')"><b>⚙</b>관리</button>
+</nav></div>
+
+<div class="modalbg" id="detailModal" onclick="if(event.target===this)closeDetail()"><div class="modal"><h3 id="detailTitle">날짜별 내역</h3><div id="detailBody"></div><button class="btn darklight" style="margin-top:14px" onclick="closeDetail()">닫기</button></div></div>
+<script>
+const BUDGET=1000000,BASE=1620000,KEY='siyeon_moneylog_v3';
+let state=JSON.parse(localStorage.getItem(KEY)||'{"expenses":[],"savings":[]}');
+let analysisDate=new Date();
+const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('ko-KR')+'원';
+const mk=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,today=()=>new Date().toISOString().slice(0,10);
+const monthExpenses=m=>state.expenses.filter(x=>x.date.startsWith(m));
+const monthSavings=m=>state.savings.filter(x=>x.date.startsWith(m));
+const sum=(arr)=>arr.reduce((a,x)=>a+Number(x.amount),0);
+const spent=m=>sum(monthExpenses(m)),extra=m=>sum(monthSavings(m)),remaining=m=>BUDGET-spent(m)-extra(m),totalSaving=m=>BASE+extra(m);
+function persist(){localStorage.setItem(KEY,JSON.stringify(state))}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function ico(c){return ({식비:'🍚',카페:'☕',쇼핑:'🛍️',교통:'🚌','문화·여가':'🎟️',생활:'🏠',기타:'🧾'})[c]||'🧾'}
+function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.id===id));if(id==='today')renderToday();if(id==='analysis')renderAnalysis()}
+function renderHome(){const m=mk(new Date()),s=spent(m),e=extra(m),r=BUDGET-s-e,rate=s/BUDGET*100;$('homeBalance').textContent=fmt(r);$('homeBalance').className='big '+(r<0?'red':'blue');$('homeSpent').textContent=fmt(s);$('homeExtra').textContent=fmt(e);$('homeSpentLabel').textContent=fmt(s)+' 사용';$('homeRate').textContent=Math.round(rate)+'%';$('budgetBar').style.width=Math.min(100,Math.max(0,rate))+'%';$('overWarning').style.display=r<0?'block':'none';$('homeTotalSaving').textContent=fmt(totalSaving(m));$('homeSavingAdd').textContent='+'+fmt(e)}
+function renderToday(){const date=$('entryDate').value||today(),m=date.slice(0,7),upto=arr=>sum(arr.filter(x=>x.date.startsWith(m)&&x.date<=date)),s=upto(state.expenses),e=upto(state.savings),r=BUDGET-s-e,dayExp=state.expenses.filter(x=>x.date===date),daySav=state.savings.filter(x=>x.date===date);$('todayDateLabel').textContent=date;$('dayRemaining').textContent=fmt(r);$('dayRemaining').style.color=r<0?'var(--red)':'var(--blue)';$('daySpentText').textContent='이 날짜까지 누적 소비 '+fmt(s)+' · 추가 저축 '+fmt(e);$('selectedDayTotal').textContent='소비 '+fmt(sum(dayExp));$('todayList').innerHTML=rows(dayExp,'expense')+(daySav.length?'<div class="line"></div><div class="tiny">추가 저축 기록</div>'+rows(daySav,'saving'):'')||'<div class="empty">이 날짜에는 기록이 없어요.</div>';$('availableForSaving').textContent=fmt(Math.max(0,r));$('availableForSaving').style.color=r<0?'var(--red)':'var(--green)'}
+function rows(items,type){if(!items.length)return '';return items.map(x=>`<div class="expense"><div class="emoji">${type==='saving'?'💰':ico(x.category)}</div><div class="expinfo"><b>${esc(type==='saving'?'생활비 추가 저축':x.memo)}</b><small>${type==='saving'?'저축 기록':esc(x.category||'소비')}</small></div><div class="expamount ${type==='saving'?'green':''}">${type==='saving'?'+':'-'}${fmt(x.amount)}</div><button class="iconbtn" onclick="removeRecord('${type}','${x.id}')">삭제</button></div>`).join('')}
+function addExpense(){const memo=$('memo').value.trim(),amount=Number($('amount').value),date=$('entryDate').value||today(),category=$('category').value;if(!memo||!amount||amount<=0){alert('사용 내역과 올바른 금액을 입력해 주세요.');return}if(amount>Math.max(0,remaining(date.slice(0,7)))){if(!confirm('현재 남은 생활비보다 큰 금액이에요. 초과 소비로 기록할까요?'))return}state.expenses.push({id:String(Date.now()),memo,amount,date,category});persist();$('memo').value='';$('amount').value='';renderAll();renderToday()}
+function addSaving(){const amount=Number($('savingAmount').value),date=$('entryDate').value||today(),avail=remaining(date.slice(0,7));if(!amount||amount<=0){alert('추가 저축할 금액을 입력해 주세요.');return}if(amount>avail){alert('현재 남은 생활비보다 큰 금액은 저축으로 기록할 수 없어요.');return}state.savings.push({id:String(Date.now()),amount,date});persist();$('savingAmount').value='';renderAll();renderToday()}
+function removeRecord(type,id){if(!confirm('이 기록을 삭제할까요?'))return;const k=type==='saving'?'savings':'expenses';state[k]=state[k].filter(x=>x.id!==id);persist();renderAll();renderToday();renderAnalysis()}
+function shiftMonth(n){analysisDate.setMonth(analysisDate.getMonth()+n);renderAnalysis()}
+function renderAnalysis(){const m=mk(analysisDate),s=spent(m),e=extra(m);$('analysisMonth').textContent=analysisDate.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});$('analysisSpend').textContent=fmt(s);$('analysisSave').textContent=fmt(totalSaving(m));$('selectedMonthSaving').textContent=fmt(totalSaving(m));const prev=new Date(analysisDate.getFullYear(),analysisDate.getMonth()-1,1),diff=totalSaving(m)-totalSaving(mk(prev));$('savingChange').textContent=(diff>0?'+':'')+fmt(diff);$('savingChange').className=diff>0?'green':diff<0?'red':'';renderCalendar(m);renderChart(m);const sav=monthSavings(m);$('savingList').innerHTML=sav.length?rows(sav,'saving'):'<div class="empty">아직 추가 저축 기록이 없어요.</div>'}
+function renderCalendar(m){const [y,mo]=m.split('-').map(Number),first=new Date(y,mo-1,1).getDay(),days=new Date(y,mo,0).getDate();let h=['일','월','화','수','목','금','토'].map(x=>`<div class="calhead">${x}</div>`).join('');for(let i=0;i<first;i++)h+='<div></div>';for(let d=1;d<=days;d++){const date=`${m}-${String(d).padStart(2,'0')}`,a=sum(state.expenses.filter(x=>x.date===date)),b=sum(state.savings.filter(x=>x.date===date));h+=`<button class="calday ${date===today()?'today':''}" onclick="showDay('${date}')"><span class="num">${d}</span>${a?`<span class="spend">소비 ${short(a)}</span>`:''}${b?`<span class="save">저축 ${short(b)}</span>`:''}</button>`}$('calendar').innerHTML=h}
+function short(n){return n>=10000?(n/10000).toFixed(n%10000?1:0)+'만':(n/1000).toFixed(0)+'천'}
+function showDay(date){const a=state.expenses.filter(x=>x.date===date),b=state.savings.filter(x=>x.date===date);$('detailTitle').textContent=date+' 내역';$('detailBody').innerHTML='<div class="row"><span>소비 합계</span><b>'+fmt(sum(a))+'</b></div><div class="row"><span>추가 저축</span><b class="green">'+fmt(sum(b))+'</b></div><div class="line"></div>'+(rows(a,'expense')||'<div class="empty">소비 기록 없음</div>')+(rows(b,'saving')||'');$('detailModal').classList.add('show')}
+function closeDetail(){$('detailModal').classList.remove('show')}
+function renderChart(current){const dates=[];for(let i=5;i>=0;i--)dates.push(new Date(analysisDate.getFullYear(),analysisDate.getMonth()-i,1));const vals=dates.map(d=>totalSaving(mk(d))),max=Math.max(BASE,...vals);$('savingChart').innerHTML=dates.map((d,i)=>`<div class="barcol"><em>${short(vals[i])}</em><i class="${mk(d)===current?'current':''}" style="height:${Math.max(4,vals[i]/max*78)}%"></i><small>${d.getMonth()+1}월</small></div>`).join('')}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='siyeon-moneylog-backup.json';a.click();URL.revokeObjectURL(url)}
+function renderAll(){const d=new Date();$('headerMonth').textContent=d.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});if(!$('entryDate').value)$('entryDate').value=today();renderHome();renderToday();renderAnalysis()}
+$('entryDate').value=today();renderAll();
+</script></body></html>
