@@ -13,6 +13,13 @@ header{height:66px;display:flex;align-items:center;justify-content:space-between
 <header><div class="brand">시연의 머니로그</div><div class="monthtag" id="headerMonth"></div></header>
 
 <section class="page active" id="home">
+ <div class="card">
+  <div class="headrow"><h2>현재 통장 잔고</h2><span class="pill">직접 입력</span></div>
+  <div class="big blue" id="currentBankBalance">미입력</div>
+  <div class="field"><label for="bankBalanceInput">실제 통장에 남아 있는 금액</label><input id="bankBalanceInput" type="number" min="0" step="10000" inputmode="numeric" placeholder="예: 2,700,000"></div>
+  <button class="btn light" onclick="saveCurrentBalance()">통장 잔고 저장</button>
+  <div class="help">입력한 금액은 실제 계좌 잔액 확인용으로 별도 저장돼요. 생활비 예산과 저축 계산에는 중복 반영되지 않아요.</div>
+ </div>
  <div class="card hero">
   <div class="heroTop"><div><div class="eyebrow">이번 달 생활비 잔액</div><div class="big blue" id="homeBalance">1,000,000원</div></div><span class="pill">생활비 100만 원</span></div>
   <div class="progress"><i id="budgetBar" style="width:0%"></i></div>
@@ -125,6 +132,8 @@ const monthSavings=m=>state.savings.filter(x=>x.date.startsWith(m));
 const sum=(arr)=>arr.reduce((a,x)=>a+Number(x.amount),0);
 const spent=m=>sum(monthExpenses(m)),extra=m=>sum(monthSavings(m)),remaining=m=>BUDGET-spent(m)-extra(m),totalSaving=m=>BASE+extra(m);
 function persist(){localStorage.setItem(KEY,JSON.stringify(state))}
+function saveCurrentBalance(){const raw=$('bankBalanceInput').value;if(raw===''||Number(raw)<0){alert('현재 통장 잔고를 숫자로 입력해 주세요.');return}state.currentBalance=Number(raw);persist();renderBankBalance();alert('현재 통장 잔고를 저장했어요.')}
+function renderBankBalance(){$('currentBankBalance').textContent=state.currentBalance==null?'아직 입력하지 않았어요':fmt(state.currentBalance);$('bankBalanceInput').value=state.currentBalance==null?'':state.currentBalance}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ico(c){return ({식비:'🍚',카페:'☕',쇼핑:'🛍️',교통:'🚌','문화·여가':'🎟️',생활:'🏠',기타:'🧾'})[c]||'🧾'}
 function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.id===id));if(id==='today')renderToday();if(id==='analysis')renderAnalysis()}
@@ -142,6 +151,6 @@ function showDay(date){const a=state.expenses.filter(x=>x.date===date),b=state.s
 function closeDetail(){$('detailModal').classList.remove('show')}
 function renderChart(current){const dates=[];for(let i=5;i>=0;i--)dates.push(new Date(analysisDate.getFullYear(),analysisDate.getMonth()-i,1));const vals=dates.map(d=>totalSaving(mk(d))),max=Math.max(BASE,...vals);$('savingChart').innerHTML=dates.map((d,i)=>`<div class="barcol"><em>${short(vals[i])}</em><i class="${mk(d)===current?'current':''}" style="height:${Math.max(4,vals[i]/max*78)}%"></i><small>${d.getMonth()+1}월</small></div>`).join('')}
 function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='siyeon-moneylog-backup.json';a.click();URL.revokeObjectURL(url)}
-function renderAll(){const d=new Date();$('headerMonth').textContent=d.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});if(!$('entryDate').value)$('entryDate').value=today();renderHome();renderToday();renderAnalysis()}
+function renderAll(){const d=new Date();$('headerMonth').textContent=d.toLocaleDateString('ko-KR',{year:'numeric',month:'long'});if(!$('entryDate').value)$('entryDate').value=today();renderBankBalance();renderHome();renderToday();renderAnalysis()}
 $('entryDate').value=today();renderAll();
 </script></body></html>
